@@ -1,0 +1,38 @@
+
+tomcat项目部署的三种方式：
+	一：直接拷贝项目文件到tomcat安装目录下的webapps下
+	虚拟目录：
+	二：在%tomcat%/conf/server.xml文件中修改（没有就新增）：<Context path="/web应用根目录" docBase="项目绝对路径"/>
+	三：在%tomcat%/conf/Catalina/localhost目录下，添加abc.xml文件，这个abc是自己的web应用根目录
+		<Context docBase="项目绝对路径"/>
+
+------------------------------------------------------------------------
+Tomcat多实例：
+	1.新建一个文件夹作为tomcat的一个实例地址
+	2.复制tomcat安装目录下的conf文件夹到新文件夹，把端口改一下，避免两个tomcat端口冲突。
+	3.新建bat文件，添加以下信息
+	  	 set "CATALINA_BASE=%cd%"
+
+set "CATALINA_HOME=tomcat安装目录"
+
+set "EXECUTABLE=%CATALINA_HOME%\bin\catalina.bat"
+
+call "%EXECUTABLE%" start
+
+
+		CATALINA_HOME ：Tomcat安装的位置，CATALINA_BASE：这个实例的位置，默认两个值一样。
+	4.在新实例的conf文件中配置虚拟目录（上面两种方式）
+	5.启动新建的bat文件，访问资源
+
+
+------------------------------------------------------------------------
+[ this is append content ]
+IDEA中打包项目到tomcat的原理：使用了Tomcat多实例
+	1.配置了tomcat，idea会为每个项目自动创建tomcat新实例，位置：C:\Users\${当前用户}\.IntelliJIdea2017.3\system\tomcat
+	2.然后会通过新增 "项目名.xml" 的方式在 ...\conf\Catalina\localhost 下配置虚拟目录 比如：<Context path="/ssm" docBase="D:\IDEA-WorkSpace\32-Maven\SSMMaven\target" />
+	3.idea启动时日志
+		Using CATALINA_BASE:   "C:\Users\yu_zh\.IntelliJIdea2017.3\system\tomcat\Unnamed_SSMMaven"
+		Using CATALINA_HOME:   "D:\Program Files\apache-tomcat-6.0.39\apache-tomcat-6.0.39"
+		Using CATALINA_TMPDIR: "D:\Program Files\apache-tomcat-6.0.39\apache-tomcat-6.0.39\temp"
+		Using JRE_HOME:        "C:\Program Files\Java\jdk1.8.0_121"
+	通过CATALINA_BASE看出来这里启动的是新的实例地址，只要端口不冲突，可以同时使用多个tomcat的实例。
