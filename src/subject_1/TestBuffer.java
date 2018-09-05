@@ -14,23 +14,17 @@ public class TestBuffer {
         // 分配一个指定容量的缓冲区
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         System.out.println("-----< allocate >-----");
-        System.out.println("position:" + buffer.position()); // 0
-        System.out.println("limit:" + buffer.limit()); // 1024
-        System.out.println("capacity:" + buffer.capacity()); // 1024
+        showAttribute(buffer); // position:0 - limit:1024 - capacity:1024
 
         // 存数据到缓冲区
         buffer.put("abcde".getBytes()); // 存入了5个字节
         System.out.println("-----< put >-----");
-        System.out.println("position:" + buffer.position()); // 5
-        System.out.println("limit:" + buffer.limit()); // 1024
-        System.out.println("capacity:" + buffer.capacity()); // 1024
+        showAttribute(buffer); // position:5 - limit:1024 - capacity:1024
 
         // 切换到读取数据，将缓冲区的界限设置为当前位置（5），并将当前位置充值为 0（从0开始读取）
         buffer.flip();
         System.out.println("-----< flip >-----");
-        System.out.println("position:" + buffer.position()); // 从 0 开始读
-        System.out.println("limit:" + buffer.limit()); // 5
-        System.out.println("capacity:" + buffer.capacity()); // 1024
+        showAttribute(buffer); // position:从 0 开始读 - limit:5 - capacity:1024
 
         // 这个时候如果存入数据会报错，因为指针在0，界限是5，而存入的数据长度10大于界限。
 //        buffer.put("zhangyu123".getBytes());
@@ -40,23 +34,17 @@ public class TestBuffer {
         buffer.get(bytes);
         System.out.println(new String(bytes, 0, bytes.length));
         System.out.println("-----< get >-----");
-        System.out.println("position:" + buffer.position()); // 5
-        System.out.println("limit:" + buffer.limit()); // 5
-        System.out.println("capacity:" + buffer.capacity()); // 1024
+        showAttribute(buffer); // position:5 - limit:5 - capacity:1024
 
         // 重复读取
         buffer.rewind();
         System.out.println("-----< rewind >-----");
-        System.out.println("position:" + buffer.position()); // 0
-        System.out.println("limit:" + buffer.limit()); // 5
-        System.out.println("capacity:" + buffer.capacity()); // 1024
+        showAttribute(buffer); // position:0 - limit:5 - capacity:1024
 
         // 清空缓存区，缓存区的数据依旧存在，只是position到了0，limit和capacity变为最大容量数值，数据处于游离状态。
         buffer.clear();
         System.out.println("-----< clear >-----");
-        System.out.println("position:" + buffer.position()); // 0
-        System.out.println("limit:" + buffer.limit()); // 1024
-        System.out.println("capacity:" + buffer.capacity()); // 1024
+        showAttribute(buffer); // position:0 - limit:1024 - capacity:1024
     }
 
     @Test
@@ -85,11 +73,15 @@ public class TestBuffer {
     }
 
     @Test
-    public void test3(){
+    public void test3() {
         //分配直接缓冲区
         ByteBuffer buf = ByteBuffer.allocateDirect(1024);
-
         System.out.println(buf.isDirect());
     }
 
+    public void showAttribute(ByteBuffer buffer) {
+        System.out.println("position:" + buffer.position());
+        System.out.println("limit:" + buffer.limit());
+        System.out.println("capacity:" + buffer.capacity());
+    }
 }
