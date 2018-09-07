@@ -39,6 +39,11 @@ public class TestRandomAccessFile {
             writeChannel.write(buffer);
             buffer.clear();
         }
+
+        writeChannel.close();
+        write.close();
+        readChannel.close();
+        read.close();
     }
 
     /**
@@ -86,5 +91,9 @@ public class TestRandomAccessFile {
             targetChannel.write(buffer);
             buffer.clear();
         }
+
+        temOutChannel.close();
+        temInChannel.close();
+        targetChannel.close();
     }
 }
